@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <array>
+#include <cstdlib>
 class Annealer{
     private:
     int numberOfStudents = 200;
@@ -16,5 +17,6 @@ class Annealer{
     void AssignRooms();
     void outputResult();
     void CalculateFitnessScore(int roomCounter);
+    void randomSwap(std::array<int, 200> rooms);
 };
 #endif
