@@ -4,7 +4,7 @@
 
 int main(){
     std::ifstream roommatesInput;
-    roommatesInput.open("docs/roommates.txt");
+    roommatesInput.open("data/roommates.txt");
     std::array<int, 40000> studentsCompatibilityArray;
     if (!roommatesInput)
     {
