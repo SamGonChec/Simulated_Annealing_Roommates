@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <array>
+#include "Annealer.h"
 
 int main(){
     std::ifstream roommatesInput;
@@ -14,9 +15,9 @@ int main(){
     for (int i = 0; i < 40000; i++)
     {
         roommatesInput >> studentsCompatibilityArray[i];
-        std::cout << studentsCompatibilityArray[i] << " ";
     }
-    
+    Annealer annealer(studentsCompatibilityArray);
+    annealer.outputResult();
 
     std::cout << "HOLA MUNDO\n";
     return 0;

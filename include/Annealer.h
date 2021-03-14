@@ -1,6 +1,7 @@
 #ifndef ANNEALER_H
 #define ANNEALER_H
 #include <iostream>
+#include <fstream>
 #include <array>
 class Annealer{
     private:
@@ -12,6 +13,6 @@ class Annealer{
     public:
     Annealer(std:: array<int, 40000> studentsCompatibility);
     void AssignRooms();
-
+    void outputResult();
 };
 #endif
