@@ -2,6 +2,8 @@
 
 Annealer::Annealer(std::array<int,40000> studentsCompatibility){
     this->studentsCompatibility = studentsCompatibility;
+    temperature = beginningTemperature * reduction;
+    acceptedChanges;
     srand(time(NULL));
     AssignRooms();
 }
@@ -11,10 +13,9 @@ void Annealer::AssignRooms(){
     }
     for (int currentRooom = 0; currentRooom < numberOfRooms; currentRooom++)
     {
-        CalculateFitnessScore(currentRooom);
+        fitnessScore[currentRooom] = CalculateFitnessScore(currentRooom);
     }
     
-    randomSwap(rooms);
 }
 void Annealer::outputResult(){
     std::ofstream outputFile;
@@ -29,7 +30,7 @@ void Annealer::outputResult(){
     
 }
 
-void Annealer::CalculateFitnessScore(int roomCounter){
+int Annealer::CalculateFitnessScore(int roomCounter){
     int score = 0;
     for (int i = 0; i < studentsPerRoom; i++){
             for (int j = i+1; j < studentsPerRoom; j++)
@@ -39,18 +40,47 @@ void Annealer::CalculateFitnessScore(int roomCounter){
                 score += studentsCompatibility[rooms[row]*200 + rooms[col]];
             }
     }
-    fitnessScore[roomCounter] = score;
+    return score;
 }
-void Annealer::randomSwap(std::array<int, 200> rooms){
+void Annealer::randomSwap(){
     int randomRoom = rand() % 50+0;
     int secondRandomRoom = rand() % 50+0;
+    int initialFitness, randomFitness;
+    initialFitness +=  CalculateFitnessScore(rooms[randomRoom]);
+    initialFitness +=  CalculateFitnessScore(rooms[secondRandomRoom]);
+
+
     if (randomRoom != secondRandomRoom)
     {    
         int randomStudent = rand() % 4+0;
         int secondRandomStudent = rand() % 4+0;
-        int temp = studentsCompatibility[rooms[randomRoom]];
+        int temp = rooms[(randomRoom*studentsPerRoom) + randomStudent];
+        rooms[(randomRoom*studentsPerRoom) + randomStudent] = rooms[(secondRandomRoom*studentsPerRoom) + secondRandomStudent];
+        rooms[(secondRandomRoom*studentsPerRoom) + secondRandomStudent] = temp;
         
-        //testing If I have calculated the right students
-        std::cout<< "Room: " << randomRoom << " Student in such room: " << rooms[(randomRoom*studentsPerRoom) + randomStudent] << " Room: " << secondRandomRoom << " Student in second such room:" << rooms[(secondRandomRoom*studentsPerRoom) + secondRandomStudent] << std::endl;
+        randomFitness += CalculateFitnessScore(rooms[randomRoom]);
+        randomFitness += CalculateFitnessScore(rooms[secondRandomRoom]);
+        if(acceptSwap(initialFitness,randomFitness)){
+            fitnessScore[randomRoom] = CalculateFitnessScore(rooms[randomRoom]);
+            fitnessScore[secondRandomRoom] = CalculateFitnessScore(rooms[secondRandomRoom]);
+        }
     }
+    else
+        randomSwap();
+}
+bool Annealer::acceptSwap(int initial, int final){
+    double probabilityAccept = 0.0;
+    int floor = 0;
+    int ceiling = 1;
+    double randomToAccept = ((double)rand() / (RAND_MAX));
+    if(final <= initial){
+        return true;
+    }
+    probabilityAccept = exp((initial-final)/temperature);
+    if (probabilityAccept >= randomToAccept)
+    {
+        return true;
+    }
+    
+    return false;
 }

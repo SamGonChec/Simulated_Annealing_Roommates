@@ -17,8 +17,10 @@ int main(){
         roommatesInput >> studentsCompatibilityArray[i];
     }
     Annealer annealer(studentsCompatibilityArray);
+    
     annealer.outputResult();
-
+    //annealer.randomSwap();
+    //annealer.outputResult();
     std::cout << "HOLA MUNDO\n";
     return 0;
 }
