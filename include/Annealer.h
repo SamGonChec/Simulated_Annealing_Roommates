@@ -16,17 +16,20 @@ class Annealer{
     int beginningTemperature = 100;
     int temperature;
     int acceptedChanges;
+    int swapAttempts;
     std::array<int,50> fitnessScore;
     std::array<int, 200> rooms;
     std::array<int, 40000> studentsCompatibility;
+    
     public:
     Annealer(std:: array<int, 40000> studentsCompatibility);
     void AssignRooms();
     void outputResult();
     int CalculateFitnessScore(int roomCounter);
-    void randomSwap();
-    bool acceptSwap(int initial, int final);
-    void randomPick();
-    void solver();
+    void RandomSwap();
+    bool AcceptSwap(int initial, int final);
+    void RandomPick();
+    void Solver();
+    void ReduceTemperature();
 };
 #endif

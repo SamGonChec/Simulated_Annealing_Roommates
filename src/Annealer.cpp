@@ -3,7 +3,8 @@
 Annealer::Annealer(std::array<int,40000> studentsCompatibility){
     this->studentsCompatibility = studentsCompatibility;
     temperature = beginningTemperature * reduction;
-    acceptedChanges;
+    acceptedChanges = 0;
+    swapAttempts = 0;
     srand(time(NULL));
     AssignRooms();
 }
@@ -42,7 +43,7 @@ int Annealer::CalculateFitnessScore(int roomCounter){
     }
     return score;
 }
-void Annealer::randomSwap(){
+void Annealer::RandomSwap(){
     int randomRoom = rand() % 50+0;
     int secondRandomRoom = rand() % 50+0;
     int initialFitness, randomFitness;
@@ -60,15 +61,15 @@ void Annealer::randomSwap(){
         
         randomFitness += CalculateFitnessScore(rooms[randomRoom]);
         randomFitness += CalculateFitnessScore(rooms[secondRandomRoom]);
-        if(acceptSwap(initialFitness,randomFitness)){
+        if(AcceptSwap(initialFitness,randomFitness)){
             fitnessScore[randomRoom] = CalculateFitnessScore(rooms[randomRoom]);
             fitnessScore[secondRandomRoom] = CalculateFitnessScore(rooms[secondRandomRoom]);
         }
     }
     else
-        randomSwap();
+        RandomSwap();
 }
-bool Annealer::acceptSwap(int initial, int final){
+bool Annealer::AcceptSwap(int initial, int final){
     double probabilityAccept = 0.0;
     int floor = 0;
     int ceiling = 1;
@@ -83,4 +84,16 @@ bool Annealer::acceptSwap(int initial, int final){
     }
     
     return false;
+}
+void Annealer::ReduceTemperature(){
+    if(swapAttempts >= numToAttempt || acceptedChanges >= numToAccept){
+        if (acceptedChanges == 0)
+        {
+            std::cout<<"I have been solved? Just Kidding just for Testing";
+        }
+        
+    }
+    temperature *= reduction;
+    swapAttempts = 0;
+    acceptedChanges = 0;
 }
