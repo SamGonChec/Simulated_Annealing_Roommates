@@ -18,7 +18,8 @@ int main(){
     }
     Annealer annealer(studentsCompatibilityArray);
     
-    annealer.outputResult();
+    annealer.Solve();
+    //annealer.outputResult();
     //annealer.randomSwap();
     //annealer.outputResult();
     std::cout << "HOLA MUNDO\n";

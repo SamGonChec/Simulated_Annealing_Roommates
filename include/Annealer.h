@@ -5,18 +5,20 @@
 #include <array>
 #include <cstdlib>
 #include <math.h>
+#include <iomanip>
 class Annealer{
     private:
     int numberOfStudents = 200;
     int numberOfRooms = 50;
     int studentsPerRoom = 4;
-    int numToAccept = 2000;
-    int numToAttempt = 20000;
-    int reduction = 0.95;
+    int const numToAccept = 2000;
+    int const numToAttempt = 20000;
+    double reduction = 0.95;
     int beginningTemperature = 100;
-    int temperature;
+    double temperature;
     int acceptedChanges;
     int swapAttempts;
+    bool solved;
     std::array<int,50> fitnessScore;
     std::array<int, 200> rooms;
     std::array<int, 40000> studentsCompatibility;
@@ -29,7 +31,7 @@ class Annealer{
     void RandomSwap();
     bool AcceptSwap(int initial, int final);
     void RandomPick();
-    void Solver();
+    void Solve();
     void ReduceTemperature();
 };
 #endif
