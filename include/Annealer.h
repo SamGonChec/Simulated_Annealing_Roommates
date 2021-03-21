@@ -14,9 +14,10 @@ class Annealer{
     int const numToAccept = 2000;
     int const numToAttempt = 20000;
     double reduction = 0.99;
-    int beginningTemperature = 10000;
+    int beginningTemperature = 100000;
     double temperature;
     int acceptedChanges;
+    int bestComp, worstComp,averageComp;
     int swapAttempts;
     bool solved;
     std::array<int,50> fitnessScore;
@@ -34,5 +35,6 @@ class Annealer{
     void RandomPick();
     void Solve();
     void ReduceTemperature();
+    void SortFileAndInfo(int roomCounter);
 };
 #endif

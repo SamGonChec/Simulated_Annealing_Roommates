@@ -5,6 +5,9 @@ Annealer::Annealer(std::array<int,40000> studentsCompatibility){
     temperature = beginningTemperature;
     swapAttempts =0;
     acceptedChanges = 0;
+    bestComp = 0;
+    worstComp = 0;
+    averageComp = 0;
     solved = false;
     srand(time(NULL));
     AssignRooms();
@@ -24,9 +27,9 @@ void Annealer::outputResult(){
     outputFile.open("data/output.txt");
     outputFile << "Beginning Temperature: " << beginningTemperature << "\n"
             << "Reduction: " << reduction << "\n"
-            << "Best Compatibility: " << "\n"
-            << "Worst Compatibility: " << "\n"
-            << "Average Compatibility: " << "\n";
+            << "Best Compatibility: " << bestComp << "\n"
+            << "Worst Compatibility: " << worstComp << "\n"
+            << "Average Compatibility: " << averageComp << "\n";
     for (int i = 0; i < numberOfRooms; i++){
         outputFile << "Room " << i << ": " << rooms[i*studentsPerRoom] 
         << " " << rooms[i*studentsPerRoom +1] 
@@ -154,16 +157,48 @@ void Annealer::ReduceTemperature(){
 }
 void Annealer::Solve(){
     while(!solved){
-        RandomPick();
+        RandomSwap();
+        //RandomPick();
         ReduceTemperature();
+    }
+    for (int i = 0; i < rooms.size(); i++)
+    {
+         SortFileAndInfo(i);   
     }
     outputResult();
 }
 void Annealer::RandomPick(){
-    int pick = rand() % 1+0;
+    int pick = rand() % 2;
     if(pick == 1){
         RandomPick();
     }
     else
         RandomUniformSwap();
+}
+void Annealer::SortFileAndInfo(int roomCounter){
+    bestComp = fitnessScore[0];
+    worstComp = fitnessScore[0];
+    for(int i = 0; i < fitnessScore.size(); i++){
+        if(fitnessScore[i] < bestComp){
+            bestComp = fitnessScore[i];
+        }
+        if(fitnessScore[i] > worstComp){
+            worstComp = fitnessScore[i];
+        }
+        averageComp += fitnessScore[i];
+    }
+    averageComp = averageComp/fitnessScore.size();
+    int temp;
+    for (int i = 0; i < studentsPerRoom; i++){
+            for (int j = i+1; j < studentsPerRoom; j++)
+            {
+                if (rooms[(studentsPerRoom*roomCounter)+i] > rooms[(studentsPerRoom*roomCounter)+j])
+                {
+                    temp = rooms[(studentsPerRoom*roomCounter)+i];
+                    rooms[(studentsPerRoom*roomCounter)+i] = rooms[(studentsPerRoom*roomCounter)+j];
+                    rooms[(studentsPerRoom*roomCounter)+j] = temp;
+                }
+                
+            }
+    }
 }
