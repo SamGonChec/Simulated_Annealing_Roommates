@@ -14,7 +14,7 @@ class Annealer{
     int const numToAccept = 2000;
     int const numToAttempt = 20000;
     double reduction = 0.99;
-    int beginningTemperature = 100000;
+    int beginningTemperature = 2000;
     double temperature;
     int acceptedChanges;
     int bestComp, worstComp,averageComp;

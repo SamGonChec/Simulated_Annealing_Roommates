@@ -157,8 +157,9 @@ void Annealer::ReduceTemperature(){
 }
 void Annealer::Solve(){
     while(!solved){
-        RandomSwap();
-        //RandomPick();
+        //RandomUniformSwap();
+        //RandomSwap();
+        RandomPick();
         ReduceTemperature();
     }
     for (int i = 0; i < rooms.size(); i++)
@@ -169,11 +170,12 @@ void Annealer::Solve(){
 }
 void Annealer::RandomPick(){
     int pick = rand() % 2;
-    if(pick == 1){
-        RandomPick();
+    if(pick == 0){
+        RandomUniformSwap();
+
     }
     else
-        RandomUniformSwap();
+        RandomSwap();
 }
 void Annealer::SortFileAndInfo(int roomCounter){
     bestComp = fitnessScore[0];
