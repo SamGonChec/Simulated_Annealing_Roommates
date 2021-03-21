@@ -22,6 +22,11 @@ void Annealer::AssignRooms(){
 void Annealer::outputResult(){
     std::ofstream outputFile;
     outputFile.open("data/output.txt");
+    outputFile << "Beginning Temperature: " << beginningTemperature << "\n"
+            << "Reduction: " << reduction << "\n"
+            << "Best Compatibility: " << "\n"
+            << "Worst Compatibility: " << "\n"
+            << "Average Compatibility: " << "\n";
     for (int i = 0; i < numberOfRooms; i++){
         outputFile << "Room " << i << ": " << rooms[i*studentsPerRoom] 
         << " " << rooms[i*studentsPerRoom +1] 
@@ -79,6 +84,43 @@ void Annealer::RandomSwap(){
         }
     }
 }
+void Annealer::RandomUniformSwap(){
+    int randomRoom = rand() % 50+0;
+    int secondRandomRoom = rand() % 50+0;
+    int initialFitness = 0;
+    int randomFitness = 0;
+    initialFitness +=  CalculateFitnessScore(randomRoom);
+    initialFitness +=  CalculateFitnessScore(secondRandomRoom);
+    if (randomRoom == secondRandomRoom)
+    {    
+        RandomUniformSwap();
+    }
+    else{
+        int tempStudentOne, tempStudentTwo;
+        tempStudentOne = rooms[(randomRoom*studentsPerRoom) + 0];
+        tempStudentTwo = rooms[(randomRoom*studentsPerRoom) + 1];
+        rooms[(randomRoom*studentsPerRoom) + 0] = rooms[(secondRandomRoom*studentsPerRoom) + 2];
+        rooms[(randomRoom*studentsPerRoom) + 1] = rooms[(secondRandomRoom*studentsPerRoom) + 3];
+        rooms[(secondRandomRoom*studentsPerRoom) + 2] = tempStudentOne;
+        rooms[(secondRandomRoom*studentsPerRoom) + 3] = tempStudentTwo;
+        swapAttempts++;
+        randomFitness += CalculateFitnessScore(randomRoom);
+        randomFitness += CalculateFitnessScore(secondRandomRoom);
+        if(AcceptSwap(initialFitness,randomFitness)){
+            acceptedChanges++;
+            fitnessScore[randomRoom] = CalculateFitnessScore(randomRoom);
+            fitnessScore[secondRandomRoom] = CalculateFitnessScore(secondRandomRoom);
+        }
+        else{
+            tempStudentOne = rooms[(secondRandomRoom*studentsPerRoom) + 2];
+            tempStudentTwo = rooms[(secondRandomRoom*studentsPerRoom) + 3];
+            rooms[(secondRandomRoom*studentsPerRoom) + 2] = rooms[(randomRoom*studentsPerRoom) + 0];
+            rooms[(secondRandomRoom*studentsPerRoom) + 3] = rooms[(randomRoom*studentsPerRoom) + 1];
+            rooms[(randomRoom*studentsPerRoom) + 0] = tempStudentOne;
+            rooms[(randomRoom*studentsPerRoom) + 1] = tempStudentTwo;
+        }
+    }
+}
 bool Annealer::AcceptSwap(int initial, int final){
     double probabilityAccept = 0.0;
     int floor = 0;
@@ -105,9 +147,6 @@ void Annealer::ReduceTemperature(){
             solved = true;
             return;
         }
-        
-            
-        
         swapAttempts = 0;
         acceptedChanges = 0;
         temperature *= reduction;
@@ -115,9 +154,16 @@ void Annealer::ReduceTemperature(){
 }
 void Annealer::Solve(){
     while(!solved){
-        RandomSwap();
+        RandomPick();
         ReduceTemperature();
     }
-    
     outputResult();
+}
+void Annealer::RandomPick(){
+    int pick = rand() % 1+0;
+    if(pick == 1){
+        RandomPick();
+    }
+    else
+        RandomUniformSwap();
 }

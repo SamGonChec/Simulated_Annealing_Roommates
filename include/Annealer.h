@@ -13,8 +13,8 @@ class Annealer{
     int studentsPerRoom = 4;
     int const numToAccept = 2000;
     int const numToAttempt = 20000;
-    double reduction = 0.95;
-    int beginningTemperature = 100;
+    double reduction = 0.99;
+    int beginningTemperature = 10000;
     double temperature;
     int acceptedChanges;
     int swapAttempts;
@@ -29,6 +29,7 @@ class Annealer{
     void outputResult();
     int CalculateFitnessScore(int roomCounter);
     void RandomSwap();
+    void RandomUniformSwap();
     bool AcceptSwap(int initial, int final);
     void RandomPick();
     void Solve();
