@@ -26,17 +26,17 @@ void Annealer::AssignRooms(){
 void Annealer::outputResult(){
     std::ofstream outputFile;
     outputFile.open("data/output.txt");
-    outputFile << "Beginning Temperature: " << beginningTemperature << "\n"
-        << "Reduction: " << reduction << "\n"
-        << "Best Compatibility: " << bestComp << "\n"
-        << "Worst Compatibility: " << worstComp << "\n"
-        << "Average Compatibility: " << averageComp << "\n";
+    outputFile << "Beginning Temperature: " << beginningTemperature << std::setw(8) << "\n"
+        << "Reduction: " << std::setw(16) << reduction << "\n"
+        << "Best Compatibility: "<< std::setw(5) << bestComp << "\n"
+        << "Worst Compatibility: " << std::setw(5)<< worstComp << "\n"
+        << "Average Compatibility: " << std::setw(2) << averageComp << "\n\n";
     for (int i = 0; i < numberOfRooms; i++){
         outputFile << "Room " << i << ": " << rooms[i*studentsPerRoom] 
         << " " << rooms[i*studentsPerRoom +1] 
         << " " << rooms[i*studentsPerRoom +2]
         << " " << rooms[i*studentsPerRoom +3]
-        << " Fitness Score: " << fitnessScore[i] << "\n";
+        << " Fitness Score: " <<  fitnessScore[i] << "\n";
     }
 }
 //Calculates fitness score and returns it to the fitnessScore array
@@ -144,7 +144,7 @@ bool Annealer::AcceptSwap(int initial, int final){
 void Annealer::ReduceTemperature(){
     if((swapAttempts >= numToAttempt) || (acceptedChanges >= numToAccept)){
         if (acceptedChanges == 0){
-            std::cout<<"I have been solved, check the output.txt file on data/output.txt";
+            std::cout<<"I have been solved, check the output.txt file on data/output.txt \n";
             solved = true;
             return;
         }
