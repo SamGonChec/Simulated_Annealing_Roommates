@@ -159,7 +159,7 @@ void Annealer::Solve(){
         RandomPick();
         ReduceTemperature();
     }
-    for (int i = 0; i < rooms.size(); i++){
+    for (int i = 0; i < numberOfRooms; i++){
          SortFileAndInfo(i);   
     }
     outputResult();
